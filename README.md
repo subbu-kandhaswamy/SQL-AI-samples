@@ -71,7 +71,10 @@ https://github.com/Azure-Samples/azure-sql-langchain
 
 ### MSSQL MCP Server
 
-A Model Context Protocol (MCP) server for MSSQL Databases using the official [MCP C# SDK](https://github.com/modelcontextprotocol/csharp-sdk).
+A Model Context Protocol (MCP) server for MSSQL Databases with comprehensive test coverage. Available in both .NET and Node.js implementations.
+
+- **Node.js Implementation**: Includes Jest-based integration tests for all MCP tools with SQL injection prevention validation
+- **.NET Implementation**: Includes xUnit-based unit tests for database operations
 
 https://github.com/Azure-Samples/SQL-AI-samples/tree/main/MssqlMcp
 

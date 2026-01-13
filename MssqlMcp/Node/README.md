@@ -48,6 +48,19 @@ This server leverages the Model Context Protocol (MCP), a versatile framework th
    npm run build
    ```
 
+3. **Run Tests (Optional)**  
+   To verify the installation and run comprehensive tests:  
+   ```bash
+   # Set up test database connection
+   export SERVER_NAME="your-server.database.windows.net"
+   export DATABASE_NAME="your-test-database"
+   export TRUST_SERVER_CERTIFICATE="true"
+   
+   # Run tests
+   npm test
+   ```
+   See the [Testing section](#testing) below for more details.
+
 ## Configuration Setup
 
 ### Option 1: VS Code Agent Setup
@@ -167,5 +180,62 @@ Once configured, you can interact with your database using natural language:
 - The server requires a WHERE clause for read operations to prevent accidental full table scans
 - Update operations require explicit WHERE clauses for security
 - Set `READONLY: "true"` in environments if you only need read access
+
+## Testing
+
+The project includes comprehensive integration tests for all MCP server tools.
+
+### Running Tests
+
+1. **Set up test environment variables:**
+   ```bash
+   export SERVER_NAME="your-server.database.windows.net"
+   export DATABASE_NAME="your-test-database"
+   export TRUST_SERVER_CERTIFICATE="true"  # Optional
+   ```
+
+2. **Run all tests:**
+   ```bash
+   npm test
+   ```
+
+3. **Run tests in watch mode (for development):**
+   ```bash
+   npm run test:watch
+   ```
+
+4. **Generate coverage report:**
+   ```bash
+   npm run test:coverage
+   ```
+
+### What's Tested
+
+The test suite validates:
+- ✅ Table creation and schema management
+- ✅ Data insertion (single and multiple records)
+- ✅ Data reading with SELECT queries
+- ✅ Data updates with WHERE clauses
+- ✅ Table listing and description
+- ✅ Security features (SQL injection prevention, query validation)
+- ✅ Error handling for invalid operations
+
+For more details, see [src/__tests__/README.md](./src/__tests__/README.md).
+
+### CI/CD Integration
+
+Tests can be integrated into your CI/CD pipeline. Example for GitHub Actions:
+
+```yaml
+- name: Run MCP Server Tests
+  env:
+    SERVER_NAME: ${{ secrets.TEST_DB_SERVER }}
+    DATABASE_NAME: ${{ secrets.TEST_DB_NAME }}
+  run: |
+    npm install
+    npm test
+```
+
+---
 
 You should now have successfully configured the MCP server for MSSQL Database with your preferred AI assistant. This setup allows you to seamlessly interact with MSSQL Database through natural language queries!
