@@ -20,8 +20,12 @@ import { ReadDataTool } from '../tools/ReadDataTool.js';
 import { UpdateDataTool } from '../tools/UpdateDataTool.js';
 import { DropTableTool } from '../tools/DropTableTool.js';
 
-// Generate unique table name for tests
-const generateTableName = () => `TestTable_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+// Generate unique table name for tests (max 50 chars)
+const generateTableName = () => {
+  const timestamp = Date.now().toString().slice(-8); // Last 8 digits
+  const random = Math.random().toString(36).substring(2, 7); // 5 chars
+  return `TestTable_${timestamp}_${random}`.substring(0, 50);
+};
 
 describe('MSSQL MCP Server Tools - Integration Tests', () => {
   let connection: sql.ConnectionPool;
@@ -43,7 +47,8 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
       return;
     }
 
-    // Connect to database
+    // Connect to database with configurable authentication
+    const authType = (process.env.AUTH_TYPE || 'azure-active-directory-default') as any;
     const config: sql.config = {
       server: process.env.SERVER_NAME!,
       database: process.env.DATABASE_NAME!,
@@ -52,7 +57,7 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
         trustServerCertificate: process.env.TRUST_SERVER_CERTIFICATE === 'true',
       },
       authentication: {
-        type: 'azure-active-directory-default',
+        type: authType,
         options: {},
       },
     };
@@ -314,6 +319,8 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
         return;
       }
 
+      // Test basic SQL injection attempt with multiple statements
+      // Note: ReadDataTool has comprehensive security validation for more sophisticated attacks
       const result = await readDataTool.run({
         query: `SELECT * FROM ${testTableName}; DROP TABLE ${testTableName}`,
       });
@@ -328,6 +335,8 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
         return;
       }
 
+      // Test SQL injection with comment-based attack
+      // Note: ReadDataTool has extensive pattern matching for various injection techniques
       const result = await readDataTool.run({
         query: `SELECT * FROM ${testTableName} WHERE Id = 1; DROP TABLE ${testTableName}; --`,
       });

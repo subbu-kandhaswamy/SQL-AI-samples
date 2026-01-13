@@ -28,7 +28,16 @@ Set the following environment variables before running tests:
 export SERVER_NAME="your-server.database.windows.net"
 export DATABASE_NAME="your-database-name"
 export TRUST_SERVER_CERTIFICATE="true"  # Optional, for development
+export AUTH_TYPE="azure-active-directory-default"  # Optional, defaults to azure-active-directory-default
 ```
+
+Supported authentication types:
+- `azure-active-directory-default` (default)
+- `azure-active-directory-access-token`
+- `azure-active-directory-msi-vm`
+- `azure-active-directory-msi-app-service`
+- `azure-active-directory-service-principal-secret`
+- `default` (SQL Server authentication)
 
 ## Running Tests
 
