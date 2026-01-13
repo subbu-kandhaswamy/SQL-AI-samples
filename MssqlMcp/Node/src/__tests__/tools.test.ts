@@ -52,7 +52,8 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
         trustServerCertificate: process.env.TRUST_SERVER_CERTIFICATE === 'true',
       },
       authentication: {
-        type: 'default',
+        type: 'azure-active-directory-default',
+        options: {},
       },
     };
 
@@ -157,7 +158,9 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
       expect(result.success).toBe(true);
       expect(result.columns).toBeDefined();
       expect(Array.isArray(result.columns)).toBe(true);
-      expect(result.columns.length).toBeGreaterThan(0);
+      if (result.columns) {
+        expect(result.columns.length).toBeGreaterThan(0);
+      }
 
       // Cleanup
       await dropTableTool.run({ tableName: testTableName });
@@ -286,7 +289,9 @@ describe('MSSQL MCP Server Tools - Integration Tests', () => {
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
-      expect(result.data.length).toBeGreaterThan(0);
+      if (result.data) {
+        expect(result.data.length).toBeGreaterThan(0);
+      }
     });
 
     it('should reject non-SELECT queries', async () => {
